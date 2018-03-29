@@ -1,5 +1,16 @@
 # Bootstrap
 
+This repository contains bootstrap scripts used by [`kubicorn`](https://github.com/kubicorn/kubicorn) to provision cloud
+instances.
+
+We've decided to move scripts to this repository, so we can easier manage them for each `kubicorn` release.
+
+For every `kubicorn` release, there's an appropriate branch for bootstrap scripts in this repository. Currently,
+`kubicorn` is in the `pre-release` phase, so it'll use bootstrap scripts from the `pre-release` branch of this
+repository.
+
+The `master` branch repository can contain scripts that are in-development or not tested.
+
 ## Developing bootstrap scripts
 
 If you are running `kubicorn` in the though level directory of the repository set the following environmental variable to force parse the bootstrap scripts locally.
