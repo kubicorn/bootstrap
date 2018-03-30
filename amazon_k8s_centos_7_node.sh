@@ -7,6 +7,7 @@
 
 # Disabling SELinux is not recommended and will be fixed later.
 sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux
+sudo sed -i 's/--selinux-enabled /--selinux-enabled=false /g' /etc/sysconfig/docker
 sudo setenforce 0
 
 sudo rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
