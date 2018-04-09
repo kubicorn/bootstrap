@@ -9,7 +9,8 @@ PRIVATE_IP=$(curl http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/a
 yum install epel-release -y
 yum install jq -y
 
-VPN=$(cat /etc/kubicorn/cluster.json | jq -r '.components.vpn')
+providerConfig=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig')
+VPN=$(echo ${providerConfig} | jq -r '.components.vpn')
 
 if [ -z $VPN ]; then
     sleep 7

@@ -14,7 +14,8 @@ OPENVPN_KEYNAME="server"
 apt-get update -y
 apt-get install -y jq
 
-VPN=$(cat /etc/kubicorn/cluster.json | jq -r '.components.vpn')
+providerConfig=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig')
+VPN=$(echo ${providerConfig} | jq -r '.components.vpn')
 
 if [ -z $VPN ]; then
     sleep 7
