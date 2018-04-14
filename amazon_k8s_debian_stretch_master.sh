@@ -5,7 +5,8 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use
-KUBERNETES_VERSION="1.9.0"
+KUBERNETES_VERSION="1.10.4"
+KUBERNETES_CNI="0.6.0"
 
 apt-get update -y
 apt-get install -y \
@@ -37,8 +38,9 @@ systemctl start docker
 
 apt-get update -y
 apt-get install -y \
-    kubelet \
+    kubelet=${KUBERNETES_VERSION}-00 \
     kubeadm=${KUBERNETES_VERSION}-00 \
+    kubernetes-cni=${KUBERNETES_CNI}-00 \
     kubectl
 
 PUBLICIP=$(ec2metadata --public-ipv4 | cut -d " " -f 2)
