@@ -25,7 +25,7 @@ apt-get install -y \
     docker.io \
     apt-transport-https \
     kubelet \
-    kubeadm=1.7.0-00 \
+    kubeadm \
     cloud-utils \
     jq
 
