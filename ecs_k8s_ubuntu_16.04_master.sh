@@ -6,6 +6,7 @@
 
 # Specify the Kubernetes version to use.
 KUBERNETES_VERSION="1.10.2"
+KUBERNETES_CNI="0.6.0"
 
 # Obtain IP addresses
 HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/hostname | cut -d '.' -f 1)
@@ -26,7 +27,7 @@ apt-get install -y \
     apt-transport-https \
     kubelet=${KUBERNETES_VERSION}-00 \
     kubeadm=${KUBERNETES_VERSION}-00 \
-    kubernetes-cni \
+    kubernetes-cni=${KUBERNETES_CNI}-00 \
     cloud-utils \
     jq
 
