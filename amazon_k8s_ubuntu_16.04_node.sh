@@ -4,8 +4,9 @@
 # and the shell script real work. If you need conditional logic, write it in bash or make another shell script.
 # ------------------------------------------------------------------------------------------------------------------------
 
-# Specify the Kubernetes version to use
-KUBERNETES_VERSION="1.8.4"
+# Specify the Kubernetes version to use.
+KUBERNETES_VERSION="1.10.4"
+KUBERNETES_CNI="0.6.0"
 
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 touch /etc/apt/sources.list.d/kubernetes.list
@@ -27,8 +28,9 @@ apt-get install -y \
     ebtables \
     docker.io \
     apt-transport-https \
-    kubelet \
+    kubelet=${KUBERNETES_VERSION}-00 \
     kubeadm=${KUBERNETES_VERSION}-00 \
+    kubernetes-cni=${KUBERNETES_CNI}-00 \
     jq
 
 systemctl enable docker
