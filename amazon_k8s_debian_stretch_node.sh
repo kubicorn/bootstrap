@@ -49,4 +49,4 @@ HOSTNAME=$(hostname -f)
 
 
 kubeadm reset
-kubeadm join --discovery-token-unsafe-skip-ca-verification --node-name ${HOSTNAME}  --token ${TOKEN} ${MASTER}
+kubeadm join --discovery-token-unsafe-skip-ca-verification --node-name ${HOSTNAME} --token ${TOKEN} ${MASTER} 

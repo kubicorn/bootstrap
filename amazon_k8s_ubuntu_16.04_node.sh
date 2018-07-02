@@ -46,4 +46,4 @@ systemctl restart kubelet.service
 HOSTNAME=$(hostname -f)
 
 kubeadm reset
-kubeadm join --node-name ${HOSTNAME} --token ${TOKEN} ${MASTER}
+kubeadm join --node-name ${HOSTNAME} --token ${TOKEN} ${MASTER} --discovery-token-unsafe-skip-ca-verification

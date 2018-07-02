@@ -47,4 +47,4 @@ systemctl daemon-reload
 systemctl restart kubelet.service
 
 kubeadm reset
-kubeadm join --token ${TOKEN} ${MASTER}
+kubeadm join --token ${TOKEN} ${MASTER} --discovery-token-unsafe-skip-ca-verification

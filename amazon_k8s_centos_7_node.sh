@@ -62,4 +62,4 @@ MASTER=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig
 HOSTNAME=$(hostname -f)
 
 sudo -E kubeadm reset
-sudo -E kubeadm join --token ${TOKEN} --node-name ${HOSTNAME} ${MASTER}
+sudo -E kubeadm join --token ${TOKEN} --node-name ${HOSTNAME} ${MASTER} --discovery-token-unsafe-skip-ca-verification
