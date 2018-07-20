@@ -47,8 +47,7 @@ systemctl start docker
 HOSTNAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
 PRIVATEIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
-VPNIP=$(ip addr show dev tun0 | awk '/inet / {print $2}' | cut -d"/" -f1)
-echo $VPNIP > /tmp/.ip
+echo $PRIVATEIP > /tmp/.ip
 
 # Specify node IP for kubelet.
 echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
