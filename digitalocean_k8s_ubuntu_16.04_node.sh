@@ -17,7 +17,7 @@ REATTEMPT_INTERVAL_SECONDS=30
 HOSTNAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
 PRIVATEIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
-echo $PRIVATEIP > /tmp/.ip
+echo "$PRIVATEIP" > /tmp/.ip
 
 # Add Kubernetes repository.
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -58,8 +58,8 @@ systemctl daemon-reload
 systemctl restart kubelet
 
 # Parse kubicorn configuration file.
-TOKEN=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
-MASTER=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDMASTER')
+TOKEN=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
+MASTER=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDMASTER')
 
 # Join node a cluster.
 kubeadm reset --force
