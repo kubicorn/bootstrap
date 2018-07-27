@@ -82,7 +82,7 @@ kubeadm reset --force
 kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
 
 # Weave CNI plugin.
-curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.6.64/27" \
+curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.0.0/16" \
 | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 mkdir -p /root/.kube
