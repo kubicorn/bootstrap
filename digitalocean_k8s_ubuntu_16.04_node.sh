@@ -9,6 +9,10 @@ KUBERNETES_VERSION="1.11.1"
 KUBERNETES_CNI="0.6.0"
 DOCKER_VERSION="17.03"
 
+# Controls delay before attempting to join the master
+MAX_ATTEMPTS=50
+REATTEMPT_INTERVAL_SECONDS=30
+
 # Obtain Droplet IP addresses.
 HOSTNAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
 PRIVATEIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
@@ -59,4 +63,20 @@ MASTER=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig
 
 # Join node a cluster.
 kubeadm reset --force
-kubeadm join --node-name "${HOSTNAME}" --token "${TOKEN}" "${MASTER}" --discovery-token-unsafe-skip-ca-verification
+
+# Delay kubeadm join until master is ready
+attempts=0
+response=000
+while [ "${response}" -ne "200" ] && [ $(( attempts++ )) -lt $MAX_ATTEMPTS ]; do
+  echo "Waiting for master to be ready(${MASTER})..."
+  sleep $REATTEMPT_INTERVAL_SECONDS
+  response=$(curl --write-out "%{http_code}" --output /dev/null --silent --connect-timeout 10 -k "https://${MASTER}/healthz" || true)
+done
+
+if [ "${response}" -ne "200" ]; then
+  echo "Maximum attempts reached, giving up"
+  exit 1
+else
+  echo "Master seems to be up and running. Joining it..."
+  kubeadm join --node-name "${HOSTNAME}" --token "${TOKEN}" "${MASTER}" --discovery-token-unsafe-skip-ca-verification
+fi
