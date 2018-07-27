@@ -13,7 +13,6 @@ DOCKER_VERSION="17.03"
 HOSTNAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
 PRIVATEIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
-echo "$PRIVATEIP" > /tmp/.ip
 
 # Add Kubernetes repository.
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
