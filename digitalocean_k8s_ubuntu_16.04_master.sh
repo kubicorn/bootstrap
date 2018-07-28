@@ -5,26 +5,37 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.9.2"
+KUBERNETES_VERSION="1.11.1"
 KUBERNETES_CNI="0.6.0"
+DOCKER_VERSION="17.03"
 
 # Obtain Droplet IP addresses.
 HOSTNAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
 PRIVATEIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
-echo $PRIVATEIP > /tmp/.ip
 
 # Add Kubernetes repository.
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 touch /etc/apt/sources.list.d/kubernetes.list
 sh -c 'echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list'
 
-# Install packages.
+# Add Docker repository
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sh -c 'echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list'
+
+# Update apt cache
 apt-get update -y
+
+# Get docker version
+pkg_pattern="$(echo "$DOCKER_VERSION" | sed "s/-ce-/~ce~/g" | sed "s/-/.*/g").*-0~ubuntu"
+search_command="apt-cache madison 'docker-ce' | grep '$pkg_pattern' | head -1 | cut -d' ' -f 4"
+pkg_version="$(sh -c "$search_command")"
+
+# Install packages.
 apt-get install -y \
     socat \
     ebtables \
-    docker.io \
+    docker-ce="${pkg_version}" \
     apt-transport-https \
     kubelet=${KUBERNETES_VERSION}-00 \
     kubeadm=${KUBERNETES_VERSION}-00 \
@@ -66,11 +77,11 @@ authorizationModes:
 EOF
 
 # Initialize cluster.
-kubeadm reset
+kubeadm reset --force
 kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
 
 # Weave CNI plugin.
-curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.6.64/27" \
+curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.0.0/16" \
 | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 mkdir -p /root/.kube
