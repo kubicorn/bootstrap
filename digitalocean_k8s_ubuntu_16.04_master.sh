@@ -53,6 +53,7 @@ systemctl daemon-reload
 systemctl restart kubelet
 
 # Parse kubicorn configuration file.
+CLUSTER_NAME=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.metadata.name')
 TOKEN=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
 PORT=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDPORT | tonumber')
 
@@ -64,6 +65,7 @@ kind: MasterConfiguration
 token: ${TOKEN}
 kubernetesVersion: ${KUBERNETES_VERSION}
 nodeName: ${HOSTNAME}
+clusterName: ${CLUSTER_NAME}
 api:
   advertiseAddress: ${PUBLICIP}
   bindPort: ${PORT}
