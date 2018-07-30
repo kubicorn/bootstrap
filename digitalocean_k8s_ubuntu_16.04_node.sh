@@ -60,7 +60,7 @@ systemctl restart kubelet
 TOKEN=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
 MASTER=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDMASTER')
 
-# Join node a cluster.
+# Reset before joining
 kubeadm reset --force
 
 # Delay kubeadm join until master is ready
@@ -72,10 +72,11 @@ while [ "${response}" -ne "200" ] && [ $(( attempts++ )) -lt $MAX_ATTEMPTS ]; do
   response=$(curl --write-out "%{http_code}" --output /dev/null --silent --connect-timeout 10 -k "https://${MASTER}/healthz" || true)
 done
 
+# Join the cluster
 if [ "${response}" -ne "200" ]; then
   echo "Maximum attempts reached, giving up"
   exit 1
 else
-  echo "Master seems to be up and running. Joining it..."
+  echo "Master seems to be up and running. Joining the node to the cluster..."
   kubeadm join --node-name "${HOSTNAME}" --token "${TOKEN}" "${MASTER}" --discovery-token-unsafe-skip-ca-verification
 fi
