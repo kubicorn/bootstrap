@@ -48,7 +48,7 @@ systemctl enable docker
 systemctl start docker
 
 # Specify node IP for kubelet.
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external" > /etc/default/kubelet
 systemctl daemon-reload
 systemctl restart kubelet
 
@@ -87,7 +87,6 @@ curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base
 | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 # DigitalOcean Cloud-Manager
-kubectl -n kube-system create secret generic digitalocean --from-literal=access-token=$(DIGITALOCEAN_ACCESS_TOKEN)
 kubectl apply -f https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml
 kubectl apply -f https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml
 
