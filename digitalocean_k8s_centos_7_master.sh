@@ -50,7 +50,7 @@ PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/a
 echo $PRIVATEIP > /tmp/.ip
 
 # Specify node IP for kubelet.
-echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external" > /etc/default/kubelet
+echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}" > /etc/default/kubelet
 systemctl daemon-reload
 systemctl restart kubelet
 
@@ -91,8 +91,8 @@ curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base
 | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 # DigitalOcean Cloud-Manager
-kubectl apply -f https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml
-kubectl apply -f https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml
+curl -SL "https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml" | kubectl apply -f -
+curl -SL "https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml" | kubectl apply -f -
 
 mkdir -p /root/.kube
 cp /etc/kubernetes/admin.conf /root/.kube/config
