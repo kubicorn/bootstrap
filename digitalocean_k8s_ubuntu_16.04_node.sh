@@ -52,7 +52,7 @@ systemctl enable docker
 systemctl start docker
 
 # Specify node IP for kubelet.
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 systemctl daemon-reload
 systemctl restart kubelet
 
