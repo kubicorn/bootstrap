@@ -56,6 +56,9 @@ echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external" > /etc
 systemctl daemon-reload
 systemctl restart kubelet
 
+# Enable Flannel Networking
+sysctl net.bridge.bridge-nf-call-iptables=1
+
 # Parse kubicorn configuration file.
 TOKEN=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
 MASTER=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDMASTER')

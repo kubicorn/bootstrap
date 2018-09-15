@@ -47,11 +47,6 @@ apt-get install -y \
 systemctl enable docker
 systemctl start docker
 
-# Specify node IP for kubelet.
-echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}" > /etc/default/kubelet
-systemctl daemon-reload
-systemctl restart kubelet
-
 # Parse kubicorn configuration file.
 CLUSTER_NAME=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.metadata.name')
 TOKEN=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
@@ -60,9 +55,10 @@ PORT=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' 
 # Create kubeadm configuration file.
 touch /etc/kubicorn/kubeadm-config.yaml
 cat << EOF  > "/etc/kubicorn/kubeadm-config.yaml"
-apiVersion: kubeadm.k8s.io/v1alpha1
+apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
-token: ${TOKEN}
+bootstrapTokens:
+- token: ${TOKEN}
 kubernetesVersion: ${KUBERNETES_VERSION}
 nodeName: ${HOSTNAME}
 clusterName: ${CLUSTER_NAME}
@@ -76,19 +72,24 @@ apiServerCertSANs:
 authorizationModes:
 - Node
 - RBAC
+networking:
+  podSubnet: "10.244.0.0/16"
 EOF
 
 # Initialize cluster.
 kubeadm reset --force
 kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
 
-# Weave CNI plugin.
-curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.0.0/16" \
-| kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
+# Flannel CNI plugin
+sysctl net.bridge.bridge-nf-call-iptables=1
+curl -SL "https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml" \
+ | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 # DigitalOcean Cloud-Manager
-curl -SL "https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml" | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
-curl -SL "https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml" | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
+curl -SL "https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml" \
+ | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
+curl -SL "https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml" \
+| kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
 
 mkdir -p /root/.kube
 cp /etc/kubernetes/admin.conf /root/.kube/config
