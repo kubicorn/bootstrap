@@ -50,7 +50,7 @@ PUBLICIP=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/a
 echo $PRIVATEIP > /tmp/.ip
 
 # Specify node IP for kubelet.
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}" > /etc/default/kubelet
 systemctl daemon-reload
 systemctl restart kubelet
 
@@ -89,6 +89,10 @@ kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
 # Weave CNI plugin.
 curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.6.64/27" \
 | kubectl apply --kubeconfig /etc/kubernetes/admin.conf -f -
+
+# DigitalOcean Cloud-Manager
+curl -SL "https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.7.yml" | kubectl apply -f -
+curl -SL "https://raw.githubusercontent.com/digitalocean/csi-digitalocean/master/deploy/kubernetes/releases/csi-digitalocean-v0.2.0.yaml" | kubectl apply -f -
 
 mkdir -p /root/.kube
 cp /etc/kubernetes/admin.conf /root/.kube/config

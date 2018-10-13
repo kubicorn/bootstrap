@@ -52,9 +52,12 @@ systemctl enable docker
 systemctl start docker
 
 # Specify node IP for kubelet.
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP}\"" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "KUBELET_EXTRA_ARGS=--node-ip=${PUBLICIP} --cloud-provider=external" > /etc/default/kubelet
 systemctl daemon-reload
 systemctl restart kubelet
+
+# Enable Flannel Networking
+sysctl net.bridge.bridge-nf-call-iptables=1
 
 # Parse kubicorn configuration file.
 TOKEN=$(< /etc/kubicorn/cluster.json jq -r '.clusterAPI.spec.providerConfig' | jq -r '.values.itemMap.INJECTEDTOKEN')
