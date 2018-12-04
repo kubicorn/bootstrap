@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.10.4"
+KUBERNETES_VERSION="1.10.11"
 KUBERNETES_CNI="0.6.0"
 
 # Disabling SELinux is not recommended and will be fixed later.
