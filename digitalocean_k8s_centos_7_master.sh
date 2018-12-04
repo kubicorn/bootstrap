@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.9.2"
+KUBERNETES_VERSION="1.10.11"
 KUBERNETES_CNI="0.6.0"
 
 # Import GPG keys and add repository entries for Kuberenetes.
