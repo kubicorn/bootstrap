@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.11.1"
+KUBERNETES_VERSION="1.14.1"
 KUBERNETES_CNI="0.6.0"
 DOCKER_VERSION="17.03"
 
@@ -78,7 +78,7 @@ EOF
 
 # Initialize cluster.
 kubeadm reset --force
-kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
+kubeadm init --config /etc/kubicorn/kubeadm-config.yaml --ignore-preflight-errors=SystemVerification
 
 # Flannel CNI plugin
 sysctl net.bridge.bridge-nf-call-iptables=1

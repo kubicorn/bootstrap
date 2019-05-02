@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.11.1"
+KUBERNETES_VERSION="1.14.1"
 KUBERNETES_CNI="0.6.0"
 DOCKER_VERSION="17.03"
 
@@ -81,5 +81,5 @@ if [ "${response}" -ne "200" ]; then
   exit 1
 else
   echo "Master seems to be up and running. Joining the node to the cluster..."
-  kubeadm join --node-name "${HOSTNAME}" --token "${TOKEN}" "${MASTER}" --discovery-token-unsafe-skip-ca-verification
+  kubeadm join --node-name "${HOSTNAME}" --token "${TOKEN}" "${MASTER}" --discovery-token-unsafe-skip-ca-verification --ignore-preflight-errors=SystemVerification
 fi
