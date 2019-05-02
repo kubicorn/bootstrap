@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.10.11"
+KUBERNETES_VERSION="1.14.1"
 KUBERNETES_CNI="0.6.0"
 
 # Import GPG keys and add repository entries for Kuberenetes.
@@ -84,7 +84,7 @@ EOF
 
 # Initialize cluster.
 kubeadm reset
-kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
+kubeadm init --config /etc/kubicorn/kubeadm-config.yaml --ignore-preflight-errors=SystemVerification
 
 # Weave CNI plugin.
 curl -SL "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=172.16.6.64/27" \

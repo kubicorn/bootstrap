@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.10.11"
+KUBERNETES_VERSION="1.14.1"
 KUBERNETES_CNI="0.6.0"
 
 # order is important:
@@ -47,9 +47,8 @@ TOKEN=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig'
 PORT=$(cat /etc/kubicorn/cluster.json | jq -r '.clusterAPI.spec.providerConfig' | jq -r '.kubernetesAPI.port | tonumber')
 
 kubeadm reset
-kubeadm init --apiserver-bind-port ${PORT} --token ${TOKEN}  --apiserver-advertise-address ${PUBLICIP} --apiserver-cert-extra-sans ${PUBLICIP} ${PRIVATEIP} --kubernetes-version ${KUBERNETES_VERSION}
+kubeadm init --apiserver-bind-port ${PORT} --token ${TOKEN}  --apiserver-advertise-address ${PUBLICIP} --apiserver-cert-extra-sans ${PUBLICIP} ${PRIVATEIP} --kubernetes-version ${KUBERNETES_VERSION} --ignore-preflight-errors=SystemVerification
 
-# Thanks Kelsey :)
 kubectl apply \
   -f http://docs.projectcalico.org/v2.3/getting-started/kubernetes/installation/hosted/kubeadm/1.6/calico.yaml \
   --kubeconfig /etc/kubernetes/admin.conf

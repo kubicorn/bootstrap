@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.10.11"
+KUBERNETES_VERSION="1.14.1"
 KUBERNETES_CNI="0.6.0"
 
 # Disabling SELinux is not recommended and will be fixed later.
@@ -82,9 +82,8 @@ authorizationModes:
 EOF
 
 kubeadm reset
-kubeadm init --config /etc/kubicorn/kubeadm-config.yaml
+kubeadm init --config /etc/kubicorn/kubeadm-config.yaml --ignore-preflight-errors=SystemVerification
 
-# Thanks Kelsey :)
 kubectl apply \
   -f http://docs.projectcalico.org/v2.3/getting-started/kubernetes/installation/hosted/kubeadm/1.6/calico.yaml \
   --kubeconfig /etc/kubernetes/admin.conf
