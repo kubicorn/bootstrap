@@ -6,7 +6,7 @@
 
 # Specify the Kubernetes version to use.
 KUBERNETES_VERSION="1.10.11"
-KUBERNETES_CNI="0.7.5"
+KUBERNETES_CNI="0.6.0"
 DOCKER_VERSION="17.03"
 
 # Obtain Droplet IP addresses.
