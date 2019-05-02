@@ -6,7 +6,7 @@
 
 # Specify the Kubernetes version to use.
 KUBERNETES_VERSION="1.10.11"
-KUBERNETES_CNI="0.7.5"
+KUBERNETES_CNI="0.6.0"
 
 # Acquire private IP address
 cat << EOF >> "/etc/network/interfaces.d/50-cloud-init.cfg"

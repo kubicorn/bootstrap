@@ -6,7 +6,7 @@
 
 # Specify the Kubernetes version to use
 KUBERNETES_VERSION="1.10.11"
-KUBERNETES_CNI="0.7.5"
+KUBERNETES_CNI="0.6.0"
 
 # Controls delay before attempting to join the master
 MAX_ATTEMPTS=50
