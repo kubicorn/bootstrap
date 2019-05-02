@@ -5,8 +5,8 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.14.1"
-KUBERNETES_CNI="0.6.0"
+KUBERNETES_VERSION="1.10.14"
+KUBERNETES_CNI="0.7.5"
 
 # Obtain IP addresses
 HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/hostname | cut -d '.' -f 1)

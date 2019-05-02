@@ -5,8 +5,8 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.14.1"
-KUBERNETES_CNI="0.6.0"
+KUBERNETES_VERSION="1.10.14"
+KUBERNETES_CNI="0.7.5"
 
 # Obtain metadata.
 PRIVATEIP=`curl --retry 5 -sfH "Metadata-Flavor: Google" "http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip"`

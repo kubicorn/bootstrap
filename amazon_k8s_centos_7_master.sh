@@ -5,8 +5,8 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.14.1"
-KUBERNETES_CNI="0.6.0"
+KUBERNETES_VERSION="1.10.14"
+KUBERNETES_CNI="0.7.5"
 
 # Disabling SELinux is not recommended and will be fixed later.
 sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux
