@@ -5,8 +5,8 @@
 # ------------------------------------------------------------------------------------------------------------------------
 
 # Specify the Kubernetes version to use.
-KUBERNETES_VERSION="1.14.1"
-KUBERNETES_CNI="0.6.0"
+KUBERNETES_VERSION="1.10.14"
+KUBERNETES_CNI="0.7.5"
 
 # Import GPG keys and add repository entries for Kuberenetes.
 rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
